@@ -96,8 +96,8 @@ public class KXmlParser implements XmlPullParser {
     private boolean token;
 
     public KXmlParser() {
-        srcBuf =
-            new char[Runtime.getRuntime().freeMemory() >= 1048576 ? 8192 : 128];
+        // srcBuf = new char[Runtime.getRuntime().freeMemory() >= 1048576 ? 8192 : 128];
+        srcBuf = new char[8192];
     }
 
     private final boolean isProp(String n1, boolean prop, String n2) {
