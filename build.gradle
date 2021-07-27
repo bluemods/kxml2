@@ -19,6 +19,9 @@ repositories {
     maven {
         url "https://dl.bintray.com/unverbraucht/java9-fixed-jars"
     }
+    maven {
+        url 'https://gitlab.com/api/v4/projects/26729549/packages/maven'
+    }
 }
 
 dependencies {
