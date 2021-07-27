@@ -23,14 +23,16 @@ Gradle file:
 repositories {
     mavenCentral()
     maven {
-        url "https://jitpack.io" // maven repo where the current library resides
+        // maven repo where the current library resides
+        url "https://jitpack.io"
     }
     maven {
-        url "https://dl.bintray.com/unverbraucht/java9-fixed-jars" // repo for fetching `xmlpull` dependency that's java 9 enabled
+        // bluemods: since bintray is gone, we now need this dependency
+        url 'https://gitlab.com/api/v4/projects/26729549/packages/maven'
     }
-    maven {
-        url 'https://gitlab.com/api/v4/projects/26729549/packages/maven' // bluemods: since bintray is gone, we now need this dependency
-    }
+    
+    // don't need this
+    // maven { url "https://dl.bintray.com/unverbraucht/java9-fixed-jars"}
 }
 
 dependencies {
