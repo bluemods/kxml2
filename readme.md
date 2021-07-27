@@ -34,6 +34,6 @@ repositories {
 
 dependencies {
     compile 'org.xmlpull:xmlpull:1.1.4.0'
-    compile 'com.github.bluemods:kxml2:master-SNAPSHOT'
+    compile 'com.github.bluemods:kxml2:-SNAPSHOT'
 }
 ```
