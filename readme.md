@@ -1,7 +1,10 @@
 # README
 
-* Now the content of `org.xmlpull.v1.XmlPullParserFactory` is split across multiple lines `org.kxml2.io.KXmlParser` & `org.kxml2.io.KXmlSerializer` instead of comma separated `org.kxml2.io.KXmlParser,org.kxml2.io.KXmlSerializer` which bombs in Java 9+. This fix will ensure java 9 module system will atleast no complain. Even with this fix, implementation of `XmlPullParserFactory` in `xmlpull` is still nothing but abuse of `ServiceLoader` implementation. But atleast it does not bomb right now
-* Library can be added as a dependency using
+This is designed for XMPP parsing / serializing for Kik specifically. Don't use for anything else. 
+
+This is also *not* stable as breaking changes can be made to it at any time.
+
+
 
 ```groovy
 repositories {
@@ -12,9 +15,13 @@ repositories {
     maven {
         url "https://dl.bintray.com/unverbraucht/java9-fixed-jars" // repo for fetching `xmlpull` dependency that's java 9 enabled
     }
+    maven {
+        url 'https://gitlab.com/api/v4/projects/26729549/packages/maven' // bluemods: since bintray is gone, we now need this dependency
+    }
 }
 
 dependencies {
-  implementation("com.github.stefanhaustein:kxml2:<version>")
+    compile 'org.xmlpull:xmlpull:1.1.4.0'
+    compile 'com.github.bluemods:kxml2:master-SNAPSHOT'
 }
 ```
