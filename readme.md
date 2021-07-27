@@ -1,10 +1,22 @@
-# README
+# KXML2 for Kik
 
 This is designed for XMPP parsing / serializing for Kik specifically. Don't use for anything else. 
 
 This is also *not* stable as breaking changes can be made to it at any time.
 
+Example:
 
+```java
+    public static XmlPullParser getNodeParser(String data) throws IOException, XmlPullParserException {
+        KXmlParser parser = new KXmlParser();
+        parser.setFeature("http://xmlpull.org/v1/doc/features.html#relaxed", true);
+        parser.setInput(new StringReader(data));
+        parser.next();
+        return parser;
+    }
+```
+
+Gradle file:
 
 ```groovy
 repositories {
