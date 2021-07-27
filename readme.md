@@ -7,10 +7,11 @@ This is also *not* stable as breaking changes can be made to it at any time.
 Example:
 
 ```java
-    public static XmlPullParser getNodeParser(String data) throws IOException, XmlPullParserException {
+    public static XmlPullParser getNodeParser(String stanza) throws IOException, XmlPullParserException {
         KXmlParser parser = new KXmlParser();
+        // Kik is very lenient with XMPP, always set relaxed to true
         parser.setFeature("http://xmlpull.org/v1/doc/features.html#relaxed", true);
-        parser.setInput(new StringReader(data));
+        parser.setInput(new StringReader(stanza));
         parser.next();
         return parser;
     }
