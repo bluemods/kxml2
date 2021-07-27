@@ -17,13 +17,46 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE. */
- 
 
 package org.kxml2.io;
 
 import java.io.*;
 import org.xmlpull.v1.*;
 
+/**
+ * <p>
+ *      This class replaces the default serializer class
+ *      which replaces characters in attributes
+ *      that Kik does not need to replace such as '@'
+ * </p>
+ *
+ * <p>
+ *     All parts that have been additionally modified
+ *     start with a 'BLUE-CHANGED' comment.
+ * </p>
+ *
+ * <p>
+ *     <br>
+ *          Note, this class has been heavily modified from
+ *          https://android.googlesource.com/platform/libcore/+/3f1a5ebc337e896977bbc75aa2dc370e97805794/xml/src/main/java/org/kxml2/io/KXmlSerializer.java
+ *      <br>
+ *          to force surrogate pairs (emojis) to be written correctly,
+ *          instead of throwing an exception or writing them in code point format &#{code-point}
+ *      <br>
+ *          XMPP does not need to do this, and the Kik app doesn't either, so those checks have been removed
+ *          and Unicode will always be written without modification.
+ *      <br>
+ * </p>
+ *
+ * <p>
+ *      <br>
+ *          Final note, this will write non-standard XML / XMPP
+ *          and will definitely break other applications.
+ *      <br>
+ *          This only for use with Kik.
+ *      <br>
+ * </p>
+ */
 public class KXmlSerializer implements XmlSerializer {
 
     //    static final String UNDEFINED = ":";
@@ -58,8 +91,8 @@ public class KXmlSerializer implements XmlSerializer {
         indent[depth] = indent[depth - 1];
 
         for (int i = nspCounts[depth - 1];
-            i < nspCounts[depth];
-            i++) {
+             i < nspCounts[depth];
+             i++) {
             writer.write(' ');
             writer.write("xmlns");
             if (!"".equals(nspStack[i * 2])) {
@@ -86,19 +119,23 @@ public class KXmlSerializer implements XmlSerializer {
     }
 
     private final void writeEscaped(String s, int quot)
-        throws IOException {
+            throws IOException {
 
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             switch (c) {
-            	case '\n':
-            	case '\r':
-            	case '\t':
-            		if(quot == -1) 
-            			writer.write(c);
-            		else 
-            			writer.write("&#"+((int) c)+';');
-            		break;
+                case '\n':
+                case '\r':
+                case '\t':
+                    // BLUE-CHANGED:
+                    // these are safe to write
+                    // unmodified for XMPP
+                    // if (quot == -1)
+                    //    writer.write(c);
+                    // else
+                    //     writer.write("&#" + ((int) c) + ';');
+                    writer.write(c);
+                    break;
                 case '&' :
                     writer.write("&amp;");
                     break;
@@ -112,12 +149,20 @@ public class KXmlSerializer implements XmlSerializer {
                 case '\'' :
                     if (c == quot) {
                         writer.write(
-                            c == '"' ? "&quot;" : "&apos;");
+                                c == '"' ? "&quot;" : "&apos;");
                         break;
                     }
                 default :
-                	//if(c < ' ')
-					//	throw new IllegalArgumentException("Illegal control code:"+((int) c));
+                    // BLUE-CHANGED: below surrogate escaping checks have been removed
+                    // Kik doesn't recognize &# unicode escapes so output as is.
+                    // Their parsers have been made lenient to accept unicode, so we will allow it as well
+                    // as we have already escaped all XMPP special characters
+                    writer.write(c);
+
+                    // BLUE-CHANGED: removed below surrogate pair handling
+                    /*
+                    //if(c < ' ')
+                    //	throw new IllegalArgumentException("Illegal control code:"+((int) c));
 
                     if (i < s.length() - 1) {
                         char cLow = s.charAt(i + 1);
@@ -136,6 +181,7 @@ public class KXmlSerializer implements XmlSerializer {
                     } else {
                         writer.write("&#" + ((int) c) + ";");
                     }
+                     */
             }
         }
     }
@@ -156,8 +202,8 @@ public class KXmlSerializer implements XmlSerializer {
     public void endDocument() throws IOException {
         while (depth > 0) {
             endTag(
-                elementStack[depth * 3 - 3],
-                elementStack[depth * 3 - 1]);
+                    elementStack[depth * 3 - 3],
+                    elementStack[depth * 3 - 1]);
         }
         flush();
     }
@@ -172,11 +218,11 @@ public class KXmlSerializer implements XmlSerializer {
     public boolean getFeature(String name) {
         //return false;
         return (
-            "http://xmlpull.org/v1/doc/features.html#indent-output"
-                .equals(
-                name))
-            ? indent[depth]
-            : false;
+                "http://xmlpull.org/v1/doc/features.html#indent-output"
+                        .equals(
+                                name))
+                ? indent[depth]
+                : false;
     }
 
     public String getPrefix(String namespace, boolean create) {
@@ -189,20 +235,20 @@ public class KXmlSerializer implements XmlSerializer {
     }
 
     private final String getPrefix(
-        String namespace,
-        boolean includeDefault,
-        boolean create)
-        throws IOException {
+            String namespace,
+            boolean includeDefault,
+            boolean create)
+            throws IOException {
 
         for (int i = nspCounts[depth + 1] * 2 - 2;
-            i >= 0;
-            i -= 2) {
+             i >= 0;
+             i -= 2) {
             if (nspStack[i + 1].equals(namespace)
-                && (includeDefault || !nspStack[i].equals(""))) {
+                    && (includeDefault || !nspStack[i].equals(""))) {
                 String cand = nspStack[i];
                 for (int j = i + 2;
-                    j < nspCounts[depth + 1] * 2;
-                    j++) {
+                     j < nspCounts[depth + 1] * 2;
+                     j++) {
                     if (nspStack[j].equals(cand)) {
                         cand = null;
                         break;
@@ -224,8 +270,8 @@ public class KXmlSerializer implements XmlSerializer {
             do {
                 prefix = "n" + (auto++);
                 for (int i = nspCounts[depth + 1] * 2 - 2;
-                    i >= 0;
-                    i -= 2) {
+                     i >= 0;
+                     i -= 2) {
                     if (prefix.equals(nspStack[i])) {
                         prefix = null;
                         break;
@@ -235,8 +281,8 @@ public class KXmlSerializer implements XmlSerializer {
             while (prefix == null);
         }
 
-		boolean p = pending;
-		pending = false;
+        boolean p = pending;
+        pending = false;
         setPrefix(prefix, namespace);
         pending = p;
         return prefix;
@@ -247,13 +293,13 @@ public class KXmlSerializer implements XmlSerializer {
     }
 
     public void ignorableWhitespace(String s)
-        throws IOException {
+            throws IOException {
         text(s);
     }
 
     public void setFeature(String name, boolean value) {
         if ("http://xmlpull.org/v1/doc/features.html#indent-output"
-            .equals(name)) {
+                .equals(name)) {
             indent[depth] = value;
         }
         else
@@ -262,11 +308,11 @@ public class KXmlSerializer implements XmlSerializer {
 
     public void setProperty(String name, Object value) {
         throw new RuntimeException(
-            "Unsupported Property:" + value);
+                "Unsupported Property:" + value);
     }
 
     public void setPrefix(String prefix, String namespace)
-        throws IOException {
+            throws IOException {
 
         check(false);
         if (prefix == null)
@@ -315,23 +361,23 @@ public class KXmlSerializer implements XmlSerializer {
     }
 
     public void setOutput(OutputStream os, String encoding)
-        throws IOException {
+            throws IOException {
         if (os == null)
             throw new IllegalArgumentException();
         setOutput(
-            encoding == null
-                ? new OutputStreamWriter(os)
-                : new OutputStreamWriter(os, encoding));
+                encoding == null
+                        ? new OutputStreamWriter(os)
+                        : new OutputStreamWriter(os, encoding));
         this.encoding = encoding;
         if (encoding != null
-            && encoding.toLowerCase().startsWith("utf"))
+                && encoding.toLowerCase().startsWith("utf"))
             unicode = true;
     }
 
     public void startDocument(
-        String encoding,
-        Boolean standalone)
-        throws IOException {
+            String encoding,
+            Boolean standalone)
+            throws IOException {
         writer.write("<?xml version='1.0' ");
 
         if (encoding != null) {
@@ -349,14 +395,14 @@ public class KXmlSerializer implements XmlSerializer {
         if (standalone != null) {
             writer.write("standalone='");
             writer.write(
-                standalone.booleanValue() ? "yes" : "no");
+                    standalone.booleanValue() ? "yes" : "no");
             writer.write("' ");
         }
         writer.write("?>");
     }
 
     public XmlSerializer startTag(String namespace, String name)
-        throws IOException {
+            throws IOException {
         check(false);
 
         //        if (namespace == null)
@@ -377,14 +423,14 @@ public class KXmlSerializer implements XmlSerializer {
         }
 
         String prefix =
-            namespace == null
-                ? ""
-                : getPrefix(namespace, true, true);
+                namespace == null
+                        ? ""
+                        : getPrefix(namespace, true, true);
 
         if ("".equals(namespace)) {
             for (int i = nspCounts[depth];
-                i < nspCounts[depth + 1];
-                i++) {
+                 i < nspCounts[depth + 1];
+                 i++) {
                 if ("".equals(nspStack[i * 2]) && !"".equals(nspStack[i * 2 + 1])) {
                     throw new IllegalStateException("Cannot set default namespace for elements in no namespace");
                 }
@@ -409,10 +455,10 @@ public class KXmlSerializer implements XmlSerializer {
     }
 
     public XmlSerializer attribute(
-        String namespace,
-        String name,
-        String value)
-        throws IOException {
+            String namespace,
+            String name,
+            String value)
+            throws IOException {
         if (!pending)
             throw new IllegalStateException("illegal position for attribute");
 
@@ -425,9 +471,9 @@ public class KXmlSerializer implements XmlSerializer {
         //		pending = false;
 
         String prefix =
-            "".equals(namespace)
-                ? ""
-                : getPrefix(namespace, false, true);
+                "".equals(namespace)
+                        ? ""
+                        : getPrefix(namespace, false, true);
 
         //		pending = true;
         //		depth++;
@@ -452,7 +498,13 @@ public class KXmlSerializer implements XmlSerializer {
         }
         writer.write(name);
         writer.write('=');
-        char q = value.indexOf('"') == -1 ? '"' : '\'';
+
+        // BLUE-CHANGED: XMPP should not allow single quote for attributes
+        // and Kik closes the connection if single / double quotes are mixed for attributes
+        // so always match the client's expected output and use single quotes
+
+        // char q = value.indexOf('"') == -1 ? '"' : '\'';
+        char q = '\"';
         writer.write(q);
         writeEscaped(value, q);
         writer.write(q);
@@ -471,7 +523,7 @@ public class KXmlSerializer implements XmlSerializer {
     	}
     */
     public XmlSerializer endTag(String namespace, String name)
-        throws IOException {
+            throws IOException {
 
         if (!pending)
             depth--;
@@ -479,10 +531,10 @@ public class KXmlSerializer implements XmlSerializer {
         //          namespace = "";
 
         if ((namespace == null
-            && elementStack[depth * 3] != null)
-            || (namespace != null
+                && elementStack[depth * 3] != null)
+                || (namespace != null
                 && !namespace.equals(elementStack[depth * 3]))
-            || !elementStack[depth * 3 + 2].equals(name))
+                || !elementStack[depth * 3 + 2].equals(name))
             throw new IllegalArgumentException("</{"+namespace+"}"+name+"> does not match start");
 
         if (pending) {
@@ -530,7 +582,7 @@ public class KXmlSerializer implements XmlSerializer {
     }
 
     public XmlSerializer text(char[] text, int start, int len)
-        throws IOException {
+            throws IOException {
         text(new String(text, start, len));
         return this;
     }
@@ -550,7 +602,7 @@ public class KXmlSerializer implements XmlSerializer {
     }
 
     public void processingInstruction(String pi)
-        throws IOException {
+            throws IOException {
         check(false);
         writer.write("<?");
         writer.write(pi);
