@@ -4,6 +4,8 @@ This is designed and used in production for XMPP parsing / serializing for Kik c
 
 This is also *not* stable as breaking changes can be made to it at any time.
 
+It's advised not to use XmlPullParserFactory, as it's very slow compared to initializing the KXmlParser directly (201ms vs 5285ms for 100,000 loops)
+
 Example (parsing):
 
 ```java
@@ -71,11 +73,11 @@ repositories {
         url "https://jitpack.io"
     }
     maven {
-        // bluemods: since bintray is gone, we now need this dependency
+        // bluemods: since bintray is gone, we now need this for the xmlpull dependency
         url 'https://gitlab.com/api/v4/projects/26729549/packages/maven'
     }
     
-    // don't need this
+    // Only use for Java 9
     // maven { url "https://dl.bintray.com/unverbraucht/java9-fixed-jars"}
 }
 
