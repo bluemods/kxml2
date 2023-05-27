@@ -83,6 +83,6 @@ repositories {
 
 dependencies {
     compile 'org.xmlpull:xmlpull:1.1.4.0'
-    compile 'com.github.bluemods:kxml2:4dae70b2a995e72f842eca0c778792ce90d6cfc7'
+    compile 'com.github.bluemods:kxml2:d8735b71000f628ee1d710fe8e1d6a5bb745ce57'
 }
 ```
