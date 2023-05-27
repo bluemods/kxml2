@@ -759,7 +759,7 @@ public class KXmlParser implements XmlPullParser {
             		error("unterminated entity ref");
             	}
             	
-            	System.out.println("broken entitiy: "+get(pos-1));
+            	// System.out.println("broken entitiy: "+get(pos-1));
             	
                 //; ends with:"+(char)c);           
 //                if (c != -1)
