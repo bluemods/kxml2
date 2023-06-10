@@ -1,8 +1,6 @@
 # KXML2 for Kik
 
-This is designed and used in production for XMPP parsing / serializing for Kik clients specifically. Don't use for anything else. 
-
-This is also *not* stable as breaking changes can be made to it at any time.
+This is designed and used in production for XMPP parsing / serializing for Kik clients specifically. It is not recommended for use in other scenarios.
 
 It's advised not to use XmlPullParserFactory, as it's very slow compared to initializing the KXmlParser directly (201ms vs 5285ms for 100,000 loops)
 
