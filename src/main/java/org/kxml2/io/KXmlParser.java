@@ -45,7 +45,7 @@ public class KXmlParser implements XmlPullParser {
 
     private boolean processNsp;
     private boolean relaxed;
-    private Hashtable entityMap;
+    private HashMap<String, String> entityMap;
     private int depth;
     private String[] elementStack = new String[16];
     private String[] nspStack = new String[8];
@@ -55,7 +55,7 @@ public class KXmlParser implements XmlPullParser {
 
     private Reader reader;
     private String encoding;
-    private char[] srcBuf;
+    private final char[] srcBuf;
 
     private int srcPos;
     private int srcCount;
@@ -84,7 +84,7 @@ public class KXmlParser implements XmlPullParser {
 //    private int stackMismatch = 0;
     private String error;
 
-    /** 
+    /**
      * A separate peek buffer seems simpler than managing
      * wrap around in the first level read buffer */
 
@@ -383,9 +383,9 @@ public class KXmlParser implements XmlPullParser {
                         && "standalone".equals(attributes[4 * pos + 2])) {
                         String st = attributes[3 + 4 * pos];
                         if ("yes".equals(st))
-                            standalone = new Boolean(true);
+                            standalone = Boolean.TRUE;
                         else if ("no".equals(st))
-                            standalone = new Boolean(false);
+                            standalone = Boolean.FALSE;
                         else
                             error("illegal standalone value: " + st);
                         pos++;
@@ -981,12 +981,13 @@ public class KXmlParser implements XmlPullParser {
         peekCount = 0;
         depth = 0;
 
-        entityMap = new Hashtable();
+        HashMap<String, String> entityMap = new HashMap<>();
         entityMap.put("amp", "&");
         entityMap.put("apos", "'");
         entityMap.put("gt", ">");
         entityMap.put("lt", "<");
         entityMap.put("quot", "\"");
+        this.entityMap = entityMap;
     }
 
     public void setInput(InputStream is, String _enc)
@@ -1450,6 +1451,47 @@ public class KXmlParser implements XmlPullParser {
             else if (eventType == START_TAG) {
                 ++level;
             }
+        }
+    }
+
+    /**
+     * Limits the internal text buffer char array capacity.
+     * <br/>
+     * If the internal capacity is not greater than the {@param maxCapacity}, this method is a no-op.
+     * <br/><br/>
+     * Consider a scenario where this parser is used for a long-lived stream (e.g. <a href="https://xmpp.org">XMPP</a>), and a large stanza was just read using the parser.
+     * <br/>
+     * This can result in the internal buffer growing to a large size to accomodate the stanza, which then remains in memory and cannot be freed without creating a new parser instance.
+     * <br/>
+     * This method allows the user to limit the max buffer size after each stanza is read to prevent the parser from consuming large amounts of memory.
+     *
+     * @param maxCapacity the max capacity that the internal text buffer can be.
+     * @throws XmlPullParserException if this method is called while the event type is not {@link XmlPullParser#END_TAG}
+     * @throws IOException if {@link KXmlParser#require(int, String, String)} throws it
+     */
+    public void limitTextBufferCapacity(int maxCapacity) throws XmlPullParserException, IOException {
+        require(END_TAG, null, null);
+
+        if (txtBuf.length > maxCapacity) {
+            txtBuf = Arrays.copyOf(txtBuf, maxCapacity);
+        }
+    }
+
+    /**
+     * Manually grows the internal text buffer to the specified minimumCapacity.
+     * <br/>
+     * If the buffer capacity is already greater than the {@param mininumCapacity}, this method is a no-op.
+     *
+     * @param minimumCapacity the minimum capacity that the internal text buffer can be.
+     * @throws XmlPullParserException if this method is called while the event type is not {@link XmlPullParser#END_TAG}
+     * @throws IOException if {@link KXmlParser#require(int, String, String)} throws it
+     */
+    public void ensureTextBufferCapacity(int minimumCapacity) throws XmlPullParserException, IOException {
+        require(END_TAG, null, null);
+
+        int oldCapacity = txtBuf.length;
+        if (minimumCapacity - oldCapacity > 0) {
+            txtBuf = Arrays.copyOf(txtBuf, minimumCapacity);
         }
     }
 }
