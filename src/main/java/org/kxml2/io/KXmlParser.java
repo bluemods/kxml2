@@ -1483,12 +1483,8 @@ public class KXmlParser implements XmlPullParser {
      * If the buffer capacity is already greater than the {@param mininumCapacity}, this method is a no-op.
      *
      * @param minimumCapacity the minimum capacity that the internal text buffer can be.
-     * @throws XmlPullParserException if this method is called while the event type is not {@link XmlPullParser#END_TAG}
-     * @throws IOException if {@link KXmlParser#require(int, String, String)} throws it
      */
-    public void ensureTextBufferCapacity(int minimumCapacity) throws XmlPullParserException, IOException {
-        require(END_TAG, null, null);
-
+    public void ensureTextBufferCapacity(int minimumCapacity) {
         int oldCapacity = txtBuf.length;
         if (minimumCapacity - oldCapacity > 0) {
             txtBuf = Arrays.copyOf(txtBuf, minimumCapacity);
