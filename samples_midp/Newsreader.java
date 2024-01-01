@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.kxml2.io.*;
 import org.xmlpull.v1.*;
@@ -13,7 +13,7 @@ public class Newsreader extends MIDlet implements CommandListener {
 	static final String URL = "http://www.newsforge.com/newsforge.xml";
 	static final String TITLE = "NewsForge";
 
-	Vector descriptions = new Vector();
+	ArrayList descriptions = new ArrayList();
 	List newsList = new List(TITLE, Choice.IMPLICIT);
 	TextBox textBox = new TextBox("", "", 256, TextField.ANY);
 	Display display;
@@ -44,7 +44,7 @@ public class Newsreader extends MIDlet implements CommandListener {
 				parser.require(XmlPullParser.END_DOCUMENT, null, null);
 			} catch (Exception e) {
 				e.printStackTrace();
-				descriptions.addElement(e.toString());
+				descriptions.add(e.toString());
 				newsList.append("Error", null);
 			}
 		}
@@ -78,7 +78,7 @@ public class Newsreader extends MIDlet implements CommandListener {
 			parser.require(XmlPullParser.END_TAG, null, "story");
 
 			if (title != null) {
-				descriptions.addElement(""+description);
+				descriptions.add(""+description);
 				newsList.append(title, null);
 			}
 		}
@@ -100,7 +100,7 @@ public class Newsreader extends MIDlet implements CommandListener {
 
 		if (c == List.SELECT_COMMAND) {
 
-			String text = (String) descriptions.elementAt(newsList.getSelectedIndex());
+			String text = (String) descriptions.get(newsList.getSelectedIndex());
 
 			if (textBox.getMaxSize() < text.length())
 				textBox.setMaxSize(text.length());

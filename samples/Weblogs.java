@@ -19,7 +19,7 @@ public class Weblogs {
     static List listChannels(String uri)
         throws IOException, XmlPullParserException {
 
-        Vector result = new Vector();
+        ArrayList result = new ArrayList();
 
         InputStream is = new URL(uri).openStream();
         XmlPullParser parser =
@@ -33,7 +33,7 @@ public class Weblogs {
         while (parser.nextTag() == XmlPullParser.START_TAG) {
             String url = readSingle(parser);
             if (url != null)
-                result.addElement(url);
+                result.add(url);
         }
         parser.require(XmlPullParser.END_TAG, "", "weblogs");
 

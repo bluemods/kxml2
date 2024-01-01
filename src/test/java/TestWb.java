@@ -3,7 +3,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
@@ -18,37 +17,35 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-public class TestWb extends TestCase 
-{
-	public void disabled_testWb() throws IllegalArgumentException,IllegalStateException, FileNotFoundException, IOException
-	{
-		File file=new File("compress.xml");
-		
-		WbxmlSerializer xs = new WbxmlSerializer();
-		boolean compress=true;
-		
-		xs.setOutput(new FileOutputStream(file),null);
-		//xs.setOutput(System.out,"UTF-8");
-		//xs.docdecl();
-		//xs.setPrefix("","http://www.hazlorealidad.com");
-		//xs.startDocument("UTF-8",true);
-		xs.startDocument(null,null);
-		//xs.comment("Comment");
-		xs.startTag(null,"root");
-		xs.startTag(null,"y");
-		xs.attribute(null,"name","value");
-		xs.writeWapExtension(Wbxml.EXT_T_1,new Integer(2));
-		xs.endTag(null,"y");
-		xs.startTag(null,"y");
-		xs.attribute(null,"name","value");
-		xs.writeWapExtension(Wbxml.EXT_T_1,new Integer(2));
-		xs.endTag(null,"y");
-		xs.endTag(null,"root");
-		xs.endDocument();
-		xs.flush();
-		 long len=file.length();
-         System.out.println(len+" bytes");
-	}
+public class TestWb extends TestCase {
+    public void disabled_testWb() throws IllegalArgumentException, IllegalStateException, IOException {
+        File file = new File("compress.xml");
+
+        WbxmlSerializer xs = new WbxmlSerializer();
+        boolean compress = true;
+
+        xs.setOutput(new FileOutputStream(file), null);
+        //xs.setOutput(System.out,"UTF-8");
+        //xs.docdecl();
+        //xs.setPrefix("","http://www.hazlorealidad.com");
+        //xs.startDocument("UTF-8",true);
+        xs.startDocument(null, null);
+        //xs.comment("Comment");
+        xs.startTag(null, "root");
+        xs.startTag(null, "y");
+        xs.attribute(null, "name", "value");
+        xs.writeWapExtension(Wbxml.EXT_T_1, 2);
+        xs.endTag(null, "y");
+        xs.startTag(null, "y");
+        xs.attribute(null, "name", "value");
+        xs.writeWapExtension(Wbxml.EXT_T_1, 2);
+        xs.endTag(null, "y");
+        xs.endTag(null, "root");
+        xs.endDocument();
+        xs.flush();
+        long len = file.length();
+        System.out.println(len + " bytes");
+    }
 
     // Using hex code units to be sure that the system charset does not affect the behavior
     private static final String EMOJI_CHAR = "\ud83d\ude48";
@@ -64,8 +61,6 @@ public class TestWb extends TestCase
         while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
             switch (xpp.getEventType()) {
                 case XmlPullParser.CDSECT:
-                    assertTrue(xpp.getText().contains(EMOJI_CHAR));
-                    break;
                 case XmlPullParser.COMMENT:
                     assertTrue(xpp.getText().contains(EMOJI_CHAR));
                     break;
@@ -104,10 +99,10 @@ public class TestWb extends TestCase
         checkParseBeyondBmp(xpp);
     }
 
-    private static final String EXPECTED_XML_SERIALIZATION = ""
-            + "<!--Emoji: " + EMOJI_CHAR + "-->\n"
-            + "<![CDATA[Emoji: " + EMOJI_CHAR + "]]>\n"
-            + "<string attr=\"&#128584;\">Emoji: &#128584;</string>";
+    private static final String EXPECTED_XML_SERIALIZATION =
+            "<!--Emoji: " + EMOJI_CHAR + "-->\n"
+                    + "<![CDATA[Emoji: " + EMOJI_CHAR + "]]>\n"
+                    + "<string attr=\"&#128584;\">Emoji: &#128584;</string>";
 
     private static void checkSerializeBeyondBmp(XmlSerializer serializer) throws IOException {
         final String text = "Emoji: " + EMOJI_CHAR;
@@ -149,4 +144,3 @@ public class TestWb extends TestCase
         assertEquals(EXPECTED_XML_SERIALIZATION, writer.toString());
     }
 }
-
