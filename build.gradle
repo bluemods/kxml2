@@ -1,13 +1,14 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id("java")
+}
 
-group = 'com.github.stefanhaustein'
-version = '2.5.0'
+group("com.github.stefanhaustein")
+version("2.5.1")
 
 java {
     modularity.inferModulePath.set(true)
-    sourceCompatibility = JavaVersion.VERSION_1_9
-    targetCompatibility = JavaVersion.VERSION_1_9
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 // This is in case we ever use non-ASCII chars in sources
@@ -17,21 +18,19 @@ compileTestJava.options.encoding = 'UTF-8'
 repositories {
     mavenLocal()
     maven {
-        url "https://dl.bintray.com/unverbraucht/java9-fixed-jars"
-    }
-    maven {
         url 'https://gitlab.com/api/v4/projects/26729549/packages/maven'
     }
 }
 
 dependencies {
-    implementation(group: 'org.xmlpull', name: 'xmlpull', version: '1.1.4.0')
-    testImplementation(group: 'junit', name: 'junit', version: '4.12')
+    implementation("org.xmlpull:xmlpull:1.1.4.0")
+    testImplementation("junit:junit:4.13.2")
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier 'sources'
+tasks.register('sourcesJar', Jar) {
     from sourceSets.main.allSource
+    dependsOn classes
+    archiveClassifier.set('sources')
 }
 
 artifacts {
