@@ -54,6 +54,12 @@ public class KXmlSerializer implements XmlSerializer {
     private boolean[] indent = new boolean[4];
     private String encoding;
 
+    // This feature allows us to output XML in a 'full' style,
+    // which matches with iOS output on Kik.
+    //
+    // To use, call setFeature("http://xmlpull.org/v1/doc/features.html#full-output", true) on this instance.
+    private boolean fullOutput;
+
     private void check(boolean close) throws IOException {
         if (!pending) {
             return;
@@ -93,7 +99,14 @@ public class KXmlSerializer implements XmlSerializer {
         nspCounts[depth + 1] = nspCounts[depth];
         //   nspCounts[depth + 2] = nspCounts[depth];
 
-        writer.write(close ? " />" : ">");
+        // Full output feature
+        if (fullOutput && close) {
+            writer.write("></");
+            writer.write(getName());
+            writer.write('>');
+        } else {
+            writer.write(close ? " />" : ">");
+        }
     }
 
     private void writeEscaped(String s, int quot) throws IOException {
@@ -220,6 +233,8 @@ public class KXmlSerializer implements XmlSerializer {
     public void setFeature(String name, boolean value) {
         if ("http://xmlpull.org/v1/doc/features.html#indent-output".equals(name)) {
             indent[depth] = value;
+        } else if ("http://xmlpull.org/v1/doc/features.html#full-output".equals(name)) {
+            fullOutput = value;
         } else {
             throw new RuntimeException("Unsupported Feature: " + name);
         }
