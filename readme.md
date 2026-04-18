@@ -61,26 +61,40 @@ Example (writing):
     }
 ```
 
-Gradle file:
+Gradle (Groovy):
 
 ```groovy
 repositories {
     mavenCentral()
     maven {
-        // maven repo where the current library resides
+        // Leave your other repositories the same, add this line if missing:
         url "https://jitpack.io"
     }
-    maven {
-        // bluemods: since bintray is gone, we now need this for the xmlpull dependency
-        url 'https://gitlab.com/api/v4/projects/26729549/packages/maven'
-    }
-    
-    // Only use for Java 9
-    // maven { url "https://dl.bintray.com/unverbraucht/java9-fixed-jars"}
 }
 
 dependencies {
-    compile 'org.xmlpull:xmlpull:1.1.4.0'
-    compile 'com.github.bluemods:kxml2:d8735b71000f628ee1d710fe8e1d6a5bb745ce57'
+    implementation("com.github.bluemods:kxml2:3.0.0")
+}
+```
+
+
+Gradle (Kotlin) 
+
+`settings.gradle.kts`:
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // Leave your other repositories the same, add this line if missing:
+        maven { setUrl("https://jitpack.io") }
+    }
+}
+```
+
+`build.gradle.kts`
+```kotlin
+dependencies {
+    // Kik XMPP parser
+    implementation("com.github.bluemods:kxml2:3.0.0")
 }
 ```
