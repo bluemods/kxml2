@@ -1,8 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 
-import org.kxml2.io.*;
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;

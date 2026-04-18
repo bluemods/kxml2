@@ -1,7 +1,6 @@
 import java.io.*;
 
-import org.kxml2.io.*;
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 public class EventList {
 

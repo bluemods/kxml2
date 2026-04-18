@@ -18,11 +18,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE. */
 
-package org.kxml2.kdom;
+package com.bluesmods.kxml2.kdom;
 
 import java.util.*;
 import java.io.*;
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 /**
  * A common base class for Document and Element,

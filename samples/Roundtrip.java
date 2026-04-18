@@ -1,10 +1,9 @@
 
-//package org.xmlpull.v1.samples;
+//package com.bluesmods.kxml2.xmlpull.v1.samples;
 
 import java.io.*;
 
-import org.kxml2.io.*;
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 public class Roundtrip {
     //private static final String FEATURE_XML_ROUNDTRIP=
     //    "http://xmlpull.org/v1/doc/features.html#xml-roundtrip";

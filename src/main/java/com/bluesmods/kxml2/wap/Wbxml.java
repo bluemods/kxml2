@@ -18,7 +18,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE. */
 
-package org.kxml2.wap;
+package com.bluesmods.kxml2.wap;
 
 /**
  * Contains the WBXML constants

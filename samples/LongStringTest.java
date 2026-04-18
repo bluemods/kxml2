@@ -1,6 +1,6 @@
 
-import org.xmlpull.v1.XmlPullParser;
-import org.kxml2.io.KXmlParser;
+import com.bluesmods.kxml2.xmlpull.v1.XmlPullParser;
+import com.bluesmods.kxml2.io.KXmlParser;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 

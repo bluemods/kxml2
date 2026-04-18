@@ -1,6 +1,8 @@
-package org.kxml2.wap.wml;
+package com.bluesmods.kxml2.wap.wml;
 
-import org.kxml2.wap.*;
+import com.bluesmods.kxml2.wap.WbxmlParser;
+import com.bluesmods.kxml2.wap.WbxmlSerializer;
+import com.bluesmods.kxml2.wap.*;
 
 
 /** This class contains the wml coding tables for elements 

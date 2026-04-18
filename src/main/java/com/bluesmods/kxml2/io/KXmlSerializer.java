@@ -18,10 +18,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE. */
 
-package org.kxml2.io;
+package com.bluesmods.kxml2.io;
 
 import java.io.*;
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 /**
  * This class replaces the default serializer class which replaces characters in attributes

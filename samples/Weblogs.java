@@ -1,4 +1,4 @@
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 import java.util.*;
 import java.io.*;

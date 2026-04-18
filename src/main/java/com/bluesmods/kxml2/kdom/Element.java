@@ -18,12 +18,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE. */
 
-package org.kxml2.kdom;
+package com.bluesmods.kxml2.kdom;
 
 import java.io.*;
 import java.util.*;
 
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 /** 
  * In order to create an element, please use the createElement method

@@ -20,12 +20,12 @@
 
 // Contributors: Paul Hackenberger
 // (unterminated entity handling in relaxed mode)
-package org.kxml2.io;
+package com.bluesmods.kxml2.io;
 
 import java.io.*;
 import java.util.*;
 
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 /**
  * A simple, pull based XML parser. This classe replaces the kXML 1

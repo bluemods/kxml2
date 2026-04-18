@@ -1,8 +1,6 @@
 import java.io.*;
 
-import org.kxml2.io.*;
-import org.kxml2.wap.*;
-import org.xmlpull.v1.*;
+import com.bluesmods.kxml2.xmlpull.v1.*;
 
 /*
  * Created on 25.09.2003
